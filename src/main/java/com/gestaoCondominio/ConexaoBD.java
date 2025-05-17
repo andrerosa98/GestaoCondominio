@@ -1,16 +1,28 @@
 package main.java.com.gestaoCondominio;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class ConexaoBD {
-    private static final String URL = "jdbc:mysql://localhost:3306/cadastro_usuarios";
-    private static final String USUARIO = "seu_usuario";
-    private static final String SENHA = "sua_senha";
+    private static final String PROPRIEDADES = "src/main/resources/sql/bd_config.properties";
 
     public static Connection getConexao() throws SQLException {
-        return DriverManager.getConnection(URL, USUARIO, SENHA);
+        Properties pv = new Properties();
+        try (FileInputStream fis = new FileInputStream(PROPRIEDADES)) {
+            pv.load(fis);
+        }catch (IOException erro){
+            throw new RuntimeException("Erro ao carregar arquivo de configuração: " + erro.getMessage());
+        }
+
+        String url = pv.getProperty("bd.url");
+        String usuario = pv.getProperty("bd.usuario");
+        String senha = pv.getProperty("bd.senha");
+
+    return DriverManager.getConnection(url, usuario, senha);
     }
 }
 

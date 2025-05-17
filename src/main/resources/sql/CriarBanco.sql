@@ -70,5 +70,6 @@ CREATE TABLE visualizacoes_documentos (
                                           CONSTRAINT fk_documentos_visualizacoes FOREIGN KEY (id_documento) REFERENCES documentos(id_documento)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Cria um usuário administrador padrão
 INSERT INTO usuarios (nome, email, senha, tipo_usuario, cpf, data_nascimento, status_aprovacao)
 VALUES ('Administrador', 'teste.condominio@gmail.com', 'admin123', 'sindico', '12345678901', '1990-01-01', 'aprovado');
