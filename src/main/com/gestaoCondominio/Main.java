@@ -1,4 +1,4 @@
-package main.java.com.gestaoCondominio;
+package main.com.gestaoCondominio;
 
 import java.util.Scanner;
 
@@ -11,6 +11,10 @@ public class Main {
         String nome = input.nextLine();
         System.out.print("Email: ");
         String email = input.nextLine();
+            while (!main.com.util.Verificar.verificarEmail(email)) {
+                System.out.print("Email inválido. Digite novamente: ");
+                email = input.nextLine();
+            }
         System.out.print("Senha: ");
         String senha = input.nextLine();
         System.out.print("CPF (Somente números: ");
