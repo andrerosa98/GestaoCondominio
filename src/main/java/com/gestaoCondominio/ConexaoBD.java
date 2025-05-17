@@ -19,8 +19,8 @@ public class ConexaoBD {
         }
 
         String url = pv.getProperty("bd.url");
-        String usuario = pv.getProperty("bd.usuario");
-        String senha = pv.getProperty("bd.senha");
+        String usuario = pv.getProperty("bd.user");
+        String senha = pv.getProperty("bd.password");
 
     return DriverManager.getConnection(url, usuario, senha);
     }
