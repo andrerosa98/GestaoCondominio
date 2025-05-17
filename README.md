@@ -11,7 +11,7 @@ Usuário (Condômino)
 Administrador (Síndico)
 
 ---
-## Funcionalidades do Sistema (na versão 1.0)
+## Funcionalidades do Sistema (versão 1.0)
 - Cadastro de usuário/Atualização de cadastro
 - Reserva de áreas comuns do condomínio
 - Agendar mudança
