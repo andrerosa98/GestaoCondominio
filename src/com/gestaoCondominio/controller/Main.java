@@ -24,16 +24,12 @@ public class Main {
 
         String senha;
         if (console != null) {
-            // Melhor abordagem: mensagem diretamente no readPassword
             char[] senhaArray = console.readPassword("Senha: ");
             senha = new String(senhaArray);
         } else {
-            // Abordagem alternativa para IDEs que não suportam Console
             System.out.print("Senha (não seguro, console não disponível): ");
             senha = input.nextLine();
         }
-
-
 
         System.out.print("CPF (Somente números): ");
             String cpf = input.nextLine();
