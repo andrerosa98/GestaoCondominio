@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class ConexaoBD {
-    private static final String PROPRIEDADES = "src/main/resources/sql/bd_config.properties";
+    private static final String PROPRIEDADES = "resources/sql/bd_config.properties";
 
     public static Connection getConexao() throws SQLException {
         Properties pv = new Properties();

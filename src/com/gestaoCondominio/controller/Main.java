@@ -4,6 +4,9 @@ import com.gestaoCondominio.service.CadastroUsuario;
 
 import java.util.Scanner;
 import java.io.Console;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class Main {
     public static void main(String[] args) {
@@ -38,9 +41,23 @@ public class Main {
                     cpf = input.nextLine();
                 }
 
-        System.out.print("Data de Nascimento (YYYY-MM-DD): ");
-        String dataNascimento = input.nextLine();
+        LocalDate dataNascimentoFinal = null;
+        while(dataNascimentoFinal == null){
+            try {
+                System.out.print("Data de Nascimento (dd/MM/yyyy): ");
+                String dataNascimento = input.nextLine();
+                DateTimeFormatter formatoEntrada = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                LocalDate dataNascimentoFormatada = LocalDate.parse(dataNascimento, formatoEntrada);
+                if (dataNascimentoFormatada.isAfter(LocalDate.now())) {
+                    System.out.println("Data de nascimento não pode ser futura.");
+                } else {
+                    dataNascimentoFinal = dataNascimentoFormatada;
+                }
+            } catch (DateTimeParseException erro) {
+                System.out.println("Formato de data inválido! Por favor, use o formato dd/MM/yyyy.");
+            }
+        }
 
-        CadastroUsuario.cadastrarUsuario(nome, email, senha, cpf, dataNascimento);
+        CadastroUsuario.cadastrarUsuario(nome, email, senha, cpf, dataNascimentoFinal.toString());
     }
 }

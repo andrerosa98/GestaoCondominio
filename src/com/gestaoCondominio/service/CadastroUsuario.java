@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class CadastroUsuario {
-    public static void cadastrarUsuario(String nome, String email, String senha, String cpf, String dataNascimento) {
+    public static void cadastrarUsuario(String nome, String email, String senha, String cpf, String dataNascimentoFinal) {
         String sql = "INSERT INTO usuarios (nome, email, senha, cpf, data_nascimento) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conexao = ConexaoBD.getConexao();
@@ -15,7 +15,7 @@ public class CadastroUsuario {
             stmt.setString(2, email);
             stmt.setString(3, senha);
             stmt.setString(4, cpf);
-            stmt.setString(5, dataNascimento);
+            stmt.setString(5, dataNascimentoFinal);
 
             stmt.executeUpdate();
             System.out.println("Usuário cadastrado com sucesso!");
