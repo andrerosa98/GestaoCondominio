@@ -1,29 +1,34 @@
 @echo off
+setlocal enabledelayedexpansion
 
-:: Configura o terminal para usar UTF-8
-chcp 65001 > nul
+:: Diretórios
+set OUT_DIR=out
+set SRC_DIR=src
+set LIB_DIR=lib
 
-:: Move para a raiz do diretório onde o .bat está localizado
-cd /d "%~dp0"
+:: Limpa compilações anteriores
+if exist "%OUT_DIR%" rd /s /q "%OUT_DIR%"
+mkdir "%OUT_DIR%"
 
-:: 1. Cria o diretório de saída (out), se ainda não existir
-if not exist "out" (
-    mkdir "out"
+:: Cria uma lista de arquivos .java
+set JAVA_FILES=
+for /R "%SRC_DIR%" %%f in (*.java) do (
+    set "JAVA_FILES=!JAVA_FILES! %%f"
 )
 
-:: 2. Compila todos os arquivos .java manualmente
-echo Compilando o código-fonte...
-javac -d out -cp "lib/*" src/com/gestaoCondominio/controller/Main.java src/com/gestaoCondominio/service/*.java src/com/gestaoCondominio/util/*.java
+:: Compila os arquivos
+echo Compilando arquivos...
+javac -d "%OUT_DIR%" -cp "%LIB_DIR%\*" !JAVA_FILES!
 
-if %errorlevel% neq 0 (
-    echo Erro na compilação. Verifique os arquivos de código.
+:: Verifica se a compilação foi bem-sucedida
+if not exist "%OUT_DIR%\com\gestaoCondominio\controller\Main.class" (
+    echo Houve um problema na compilação. Verifique os erros acima.
     pause
-    exit /b
+    exit /b 1
 )
 
-:: 3. Executa a classe principal com MySQL no classpath
-echo Iniciando o programa...
-java -cp "out;lib/*" com.gestaoCondominio.controller.Main
+:: Executa a aplicação
+echo Executando aplicação...
+java -cp "%OUT_DIR%;%LIB_DIR%\*" com.gestaoCondominio.controller.Main
 
-:: 4. Pausa para evitar fechamento imediato do terminal
 pause
