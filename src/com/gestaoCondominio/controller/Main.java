@@ -21,7 +21,6 @@ public class Main {
                     email = input.nextLine();
                 }
 
-        System.out.print("Senha: ");
             String senha;
             if (console != null) {
                 char[] senhaArray = console.readPassword("Senha: "); // Entrada sem exibir texto
