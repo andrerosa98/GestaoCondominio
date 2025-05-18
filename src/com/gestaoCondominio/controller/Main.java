@@ -11,6 +11,7 @@ public class Main {
         Console console = System.console();
 
         System.out.println("Cadastro de Usuário");
+
         System.out.print("Nome: ");
         String nome = input.nextLine();
 
@@ -21,14 +22,17 @@ public class Main {
                     email = input.nextLine();
                 }
 
-            String senha;
-            if (console != null) {
-                char[] senhaArray = console.readPassword("Senha: "); // Entrada sem exibir texto
-                senha = new String(senhaArray); // Converte para String
-            } else {
-                System.out.print("Senha (não seguro, console não disponível): ");
-                senha = input.nextLine();
-            }
+        String senha;
+        if (console != null) {
+            // Melhor abordagem: mensagem diretamente no readPassword
+            char[] senhaArray = console.readPassword("Senha: ");
+            senha = new String(senhaArray);
+        } else {
+            // Abordagem alternativa para IDEs que não suportam Console
+            System.out.print("Senha (não seguro, console não disponível): ");
+            senha = input.nextLine();
+        }
+
 
 
         System.out.print("CPF (Somente números): ");
