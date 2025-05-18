@@ -17,8 +17,12 @@ public class Main {
             }
         System.out.print("Senha: ");
         String senha = input.nextLine();
-        System.out.print("CPF (Somente números: ");
+        System.out.print("CPF (Somente números): ");
         String cpf = input.nextLine();
+            while (!main.com.util.Verificar.verificarCPF(cpf)) {
+                System.out.print("CPF inválido. Digite novamente: ");
+                cpf = input.nextLine();
+            }
         System.out.print("Data de Nascimento (YYYY-MM-DD): ");
         String dataNascimento = input.nextLine();
 

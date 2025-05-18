@@ -14,4 +14,15 @@ public class Verificar {
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
+
+    public static boolean verificarCPF(String cpf) {
+        cpf = cpf.replaceAll("\\D", ""); // Remove todos os caracteres não numéricos. O \\D é uma classe
+        //                                                   de caracteres que representa qualquer caractere que não seja um dígito.
+
+        String regex = "^[0-9]{11}$"; // O CPF deve conter exatamente 11 dígitos numéricos.
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(cpf);
+        return matcher.matches();
+    }
 }
