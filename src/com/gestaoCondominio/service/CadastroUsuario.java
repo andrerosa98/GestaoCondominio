@@ -3,6 +3,7 @@ package com.gestaoCondominio.service;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import com.gestaoCondominio.service.ConexaoBD;
 
 public class CadastroUsuario {
     public static void cadastrarUsuario(String nome, String email, String senha, String cpf, String dataNascimentoFinal) {

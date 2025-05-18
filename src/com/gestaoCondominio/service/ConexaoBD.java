@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class ConexaoBD {
-    private static final String PROPRIEDADES = "resources/sql/bd_config.properties";
+    private static final String PROPRIEDADES = "src/resources/sql/bd_config.properties";
 
     public static Connection getConexao() throws SQLException {
         Properties pv = new Properties();
@@ -25,4 +25,3 @@ public class ConexaoBD {
     return DriverManager.getConnection(url, usuario, senha);
     }
 }
-
