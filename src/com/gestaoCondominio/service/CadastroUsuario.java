@@ -86,4 +86,15 @@ public class CadastroUsuario {
 
         CadastroUsuario.cadastrarUsuario(nome, email, senha, cpf, dataNascimentoFinal.toString());
     }
+
+    public static void Continuar(){
+        Scanner input = new Scanner(System.in);
+        System.out.print("Deseja cadastrar outro usuário? (1 - Sim, 0 - Não): ");
+        int continuar = input.nextInt();
+        while (continuar == 1) {
+            CadastroUsuario.Cadastro();
+            System.out.print("Deseja cadastrar outro usuário? (1 - Sim, 0 - Não): ");
+            continuar = input.nextInt();
+        }
+    }
 }
