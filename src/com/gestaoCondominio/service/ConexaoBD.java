@@ -1,4 +1,4 @@
-package main.com.gestaoCondominio;
+package com.gestaoCondominio.service;
 
 import java.io.FileInputStream;
 import java.io.IOException;

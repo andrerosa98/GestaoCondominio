@@ -1,4 +1,4 @@
-package main.com.gestaoCondominio;
+package com.gestaoCondominio.service;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

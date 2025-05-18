@@ -1,4 +1,4 @@
-package main.com.util;
+package com.gestaoCondominio.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
