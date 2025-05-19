@@ -19,6 +19,9 @@ public class Main {
                     CadastroUsuario.Cadastro();
                     CadastroUsuario.Continuar();
                     break;
+                case 2:
+
+                break;
                 case 0:
                     System.out.println("Saindo...");
                     break;

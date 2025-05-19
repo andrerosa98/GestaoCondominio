@@ -9,6 +9,7 @@ public class Menu {
         System.out.println("Sistema GestCondo");
         System.out.println("Menu");
         System.out.println("1 - Cadastrar Usuário");
+        System.out.println("2 - Estatísticas");
         System.out.println("0 - Sair");
         System.out.print("Digite a opção desejada: ");
     }
