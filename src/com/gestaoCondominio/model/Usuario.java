@@ -18,6 +18,10 @@ public class Usuario {
         this.dataNascimento = dataNascimento;
     }
 
+    public Usuario(){ //novo
+
+    }
+
     public String getNome() {
         return nome;
     }
