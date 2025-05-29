@@ -22,6 +22,7 @@ public class CadastroUsuario {
             stmt.setString(2, email);
             stmt.setString(3, senha);
             stmt.setString(4, cpf);
+            stmt.setInt(4, numAp);
             stmt.setString(5, dataNascimentoFinal);
 
             stmt.executeUpdate();
@@ -37,6 +38,7 @@ public class CadastroUsuario {
         String email;
         String senha;
         String cpf;
+        int numAp;
         LocalDate dataNascimentoFinal = null;
 
         Scanner input = new Scanner(System.in);
@@ -70,6 +72,9 @@ public class CadastroUsuario {
             cpf = input.nextLine();
         }
 
+        System.out.print("Número do apartamento: ");
+        numAp = input.nextInt();
+
         while(dataNascimentoFinal == null){
             try {
                 System.out.print("Data de Nascimento (dd/MM/yyyy): ");
@@ -86,7 +91,7 @@ public class CadastroUsuario {
             }
         }
 
-        CadastroUsuario.cadastrarUsuario(nome, email, senha, cpf, dataNascimentoFinal.toString());
+        CadastroUsuario.cadastrarUsuario(nome, email, senha, cpf, numAp, dataNascimentoFinal.toString());
     }
 
     public static void Continuar(){

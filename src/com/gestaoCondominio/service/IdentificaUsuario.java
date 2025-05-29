@@ -24,16 +24,34 @@ public class IdentificaUsuario {
         
 
         String tipoUsuario = usuario.getTipoUsuario();
+        int opcaoMenu;
 
         if (usuario != null) {
             //no arquivo login, verifica se o usuario é nulo ou nao
 
         if (tipoUsuario.equals("condomino")) {
             //entrar no menu de condominos (c)
+            do { 
+                MenuCondomino.inicioMenuC();
+                opcaoMenu = dado.nextInt();
+                switch(opcaoMenu){
+                    case 1:
+                        //abre a classe de cadastro moradores
+                        break;
+                    case 2:
+                        ReservaAreaComum.realizarReserva();
+                        break;
+                    case 3:
+                        //agendar mudança
+                        break;
+                    default:
+                        System.out.println("Opção inválida. Tente novamente.");
+                }
+            } while (true);
 
         }
         else if (tipoUsuario.equals("sindico")) {
-            //entrar no menu do síndico (d)
+            //entrar no menu de sindicos (d)
         }}
         else {
             System.out.println("Usuário não cadastrado");
