@@ -1,3 +1,4 @@
+package com.gestaoCondominio.service;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,7 +31,7 @@ class SolicitacaoReserva{
 
 public class ReservaAreaComum {
 
-    public static void realizarReserva(String[] args) {
+    public static void realizarReserva() {
         int opcaoArea;
         int ano;
         int mes;
