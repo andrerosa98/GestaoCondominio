@@ -13,8 +13,8 @@ import org.mindrot.jbcrypt.BCrypt; //novo
 
 
 public class CadastroUsuario {
-    public static void cadastrarUsuario(String nome, String email, String senha, String cpf, String dataNascimentoFinal) {
-        String sql = "INSERT INTO usuarios (nome, email, senha, cpf, data_nascimento) VALUES (?, ?, ?, ?, ?)";
+    public static void cadastrarUsuario(String nome, String email, String senha, String cpf, int numAp, String dataNascimentoFinal) {
+        String sql = "INSERT INTO usuarios (nome, email, senha, cpf, numAp, data_nascimento) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conexao = ConexaoBD.getConexao();
              PreparedStatement stmt = conexao.prepareStatement(sql)) {
@@ -65,7 +65,7 @@ public class CadastroUsuario {
         if (console != null) {
             char[] senhaArray = console.readPassword("Senha: ");            
             senha = new String(senhaArray);
-            String hash = BCrypt.hashpw(senha, BCrypt.gensalt()); //novo
+            //String hash = BCrypt.hashpw(senha, BCrypt.gensalt()); //novo
         } else {
             System.out.print("Senha (não seguro, console não disponível): ");
             senha = input.nextLine();

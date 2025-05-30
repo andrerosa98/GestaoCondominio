@@ -30,7 +30,6 @@ class SolicitacaoReserva{
 }
 
 public class ReservaAreaComum {
-
     public static void realizarReserva() {
         int opcaoArea;
         int ano;
