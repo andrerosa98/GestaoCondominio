@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
+import org.mindrot.jbcrypt.BCrypt; //novo
 
 
 public class CadastroUsuario {
@@ -54,8 +55,9 @@ public class CadastroUsuario {
         }
 
         if (console != null) {
-            char[] senhaArray = console.readPassword("Senha: ");
+            char[] senhaArray = console.readPassword("Senha: ");            
             senha = new String(senhaArray);
+            String hash = BCrypt.hashpw(senha, BCrypt.gensalt()); //novo
         } else {
             System.out.print("Senha (não seguro, console não disponível): ");
             senha = input.nextLine();
