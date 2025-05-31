@@ -159,4 +159,34 @@ public class Menu {
                 System.out.println("Opção inválida. Tente novamente.");
         }
     }
+
+    public static void maisInformacoes() {
+        System.out.println("------------------------");
+        System.out.println("Mais Informações");
+        System.out.println("1 - Sobre o Sistema");
+        System.out.println("2 - Contato");
+        System.out.println("0 - Voltar ao Menu Principal");
+        System.out.print("Digite a opção desejada: ");
+        int opcao = new Scanner(System.in).nextInt();
+
+        switch (opcao) {
+            case 1:
+                System.out.println("----------------------------------------------------------------------------------------------------------");
+                System.out.println("Sistema de gestão de condomínios, desenvolvido para facilitar a administração e o dia a dia dos moradores.");
+                System.out.println("Criado por André Luis, Caio Medeiros e Rodrigo Pinheiro.");
+                System.out.println("----------------------------------------------------------------------------------------------------------");
+                maisInformacoes(); // Retorna ao menu de mais informações
+                break;
+            case 2:
+                System.out.println("Contato: gestcondo@gmail.com");
+                maisInformacoes();
+                break;
+            case 0:
+                inicial();
+                break;
+            default:
+                System.out.println("Opção inválida. Tente novamente.");
+                maisInformacoes();
+        }
+    }
 }

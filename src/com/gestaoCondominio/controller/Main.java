@@ -18,13 +18,13 @@ public class Main {
             switch (opcao) {
                 case 1:
                     Menu.identificaUsuario();
-                    break;
+                break;
                 case 2:
-
+                    Menu.maisInformacoes();
                 break;
                 case 0:
                     System.out.println("Saindo...");
-                    break;
+                break;
                 default:
                     System.out.println("Opção inválida. Tente novamente.");
             }
