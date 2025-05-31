@@ -6,6 +6,7 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Scanner;
+import java.sql.SQLException;
 
 class SolicitacaoReserva{
     private int id;
@@ -30,7 +31,7 @@ class SolicitacaoReserva{
 }
 
 public class ReservaAreaComum {
-    public static void realizarReserva() {
+    public static void realizarReserva(String tipoUsuario) throws SQLException {
         int opcaoArea;
         int ano;
         int mes;
@@ -64,7 +65,8 @@ public class ReservaAreaComum {
                 break;
             default:
                 System.out.println("Opção inválida. Reserva cancelada.");
-                dado.close();
+                // Retorna ao menu apropriado após cancelar a reserva
+                voltarAoMenu(tipoUsuario);
                 return;
         }
 
@@ -112,7 +114,6 @@ public class ReservaAreaComum {
 
         System.out.print("Informe a duração da reserva (em horas): ");
         int duracao = dado.nextInt();
-        dado.close();
 
         LocalDateTime dataHoraReserva = LocalDateTime.of(ano, mes, dia, hora, minuto);
 
@@ -121,5 +122,16 @@ public class ReservaAreaComum {
         System.out.println("\nReserva solitada com sucesso:");
         System.out.println(reserva);
         System.out.println("\nAguardar aprovação do sindico para liberação da reserva.");
+
+        // Retorna ao menu apropriado após concluir a reserva
+        voltarAoMenu(tipoUsuario);
+    }
+
+    private static void voltarAoMenu(String tipoUsuario) throws SQLException {
+        if ("condomino".equals(tipoUsuario)) {
+            Menu.condomino();
+        } else if ("sindico".equals(tipoUsuario)) {
+            Menu.sindico();
+        }
     }
 }

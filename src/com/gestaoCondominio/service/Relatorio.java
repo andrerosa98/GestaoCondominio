@@ -33,12 +33,13 @@ public class Relatorio {
                 } return listaUsuarios;
              }
     }
-    public static void main(String[] args) throws SQLException {
+
+    public static void listaCondominos() throws SQLException {
         ArrayList<Usuario> listaUsuarios = relatorioGeral();
         System.out.println("+-----------------+------------------------------------------+------------------------------------------+----------------+-------------------+--------+");
         System.out.println("| APTO            | NOME                                     | E-MAIL                                   | CPF            | DATA NASCIMENTO   | IDADE  |");
         System.out.println("+-----------------+------------------------------------------+------------------------------------------+----------------+-------------------+--------+");
-        for (int i = 0; i< listaUsuarios.size(); i++) {
+        for (int i = 0; i < listaUsuarios.size(); i++) {
             Usuario usuario = listaUsuarios.get(i);
             System.out.printf("| %-15s | %-40s | %-40s | %-14s | %-17s | %-6d |\n",
                     "Apto", // implementar depois que tiver a tabela de apto

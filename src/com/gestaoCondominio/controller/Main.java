@@ -3,10 +3,11 @@ package com.gestaoCondominio.controller;
 import com.gestaoCondominio.service.CadastroUsuario;
 import com.gestaoCondominio.service.Menu;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         Scanner input = new Scanner(System.in);
         int opcao;
 
@@ -16,8 +17,7 @@ public class Main {
             System.out.println("------------------------");
             switch (opcao) {
                 case 1:
-                    CadastroUsuario.cadastro();
-                    CadastroUsuario.continuar();
+                    Menu.identificaUsuario();
                     break;
                 case 2:
 

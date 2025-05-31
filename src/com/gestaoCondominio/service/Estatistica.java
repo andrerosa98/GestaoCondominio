@@ -9,7 +9,7 @@ import static com.gestaoCondominio.service.Relatorio.relatorioGeral;
 
 public class Estatistica
 {
-    public static void main (String[] args) throws SQLException {
+    public static void moradores() throws SQLException {
         //declaração de variáveis
         ArrayList<Usuario> listaUsuarios = relatorioGeral();
         float faixa1 = 0 , faixa2 = 0 , faixa3 = 0 , faixa4 = 0 ;
