@@ -1,8 +1,5 @@
 package com.gestaoCondominio.controller;
 
-import com.gestaoCondominio.service.CadastroUsuario;
-import com.gestaoCondominio.service.Menu;
-
 import java.sql.SQLException;
 import java.util.Scanner;
 

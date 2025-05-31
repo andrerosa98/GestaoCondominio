@@ -25,6 +25,7 @@ public class Login {
              ResultSet rs = stmt.executeQuery();
 
              if (rs.next()) {
+                 usuario.setId(rs.getInt("id_usuario"));
                  usuario.setNome(rs.getString("nome"));
                  usuario.setEmail(rs.getString("email"));
                  usuario.setSenha(rs.getString("senha"));

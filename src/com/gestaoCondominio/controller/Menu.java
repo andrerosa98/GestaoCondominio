@@ -1,6 +1,7 @@
-package com.gestaoCondominio.service;
+package com.gestaoCondominio.controller;
 
 import com.gestaoCondominio.model.Usuario;
+import com.gestaoCondominio.service.*;
 
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -33,7 +34,7 @@ public class Menu {
         {
             if ("condomino".equals(usuario.getTipoUsuario())) {
                 System.out.println("Bem-vindo, " + usuario.getNome() + "!");
-                Menu.condomino();
+                Menu.condomino(usuario);
             } else if ("sindico".equals(usuario.getTipoUsuario())) {
                 System.out.println("Bem-vindo, síndico " + usuario.getNome() + "!");
                 Menu.sindico();
@@ -45,7 +46,8 @@ public class Menu {
 
     }
 
-    public static void condomino(){
+    public static void condomino(Usuario usuario){
+        Usuario usuarioLogado = usuario;
         System.out.println("------------------------------");
         System.out.println("Sistema GestCondo - Condôminos");
         System.out.println("Menu");
@@ -57,27 +59,30 @@ public class Menu {
         int opcao = new Scanner(System.in).nextInt();
         switch (opcao){
             case 1:
+
                 try {
                     ReservaAreaComum.realizarReserva("condomino");
                 } catch (SQLException e) {
                     System.out.println("Erro ao processar a reserva: " + e.getMessage());
-                    condomino(); // Volta ao menu de condômino em caso de erro
+                    condomino(usuarioLogado); // Volta ao menu de condômino em caso de erro
                 }
                 break;
             case 2:
                 System.out.println("Em desenvolvimento...");
-                condomino(); // Volta ao menu de condômino
+                condomino(usuarioLogado); // Volta ao menu de condômino
                 break;
             case 3:
+                CadastroUsuario.cadastroPorCondomino(usuarioLogado);
+                condomino(usuarioLogado);
                 CadastroUsuario.cadastro();
-                condomino();
+                condomino(usuarioLogado);
                 break;
             case 0:
                 System.out.println("Saindo...");
                 break;
             default:
                 System.out.println("Opção inválida. Tente novamente.");
-                condomino(); // Volta ao menu de condômino em caso de opção inválida
+                condomino(usuarioLogado); // Volta ao menu de condômino em caso de opção inválida
                 break;
         }
     }

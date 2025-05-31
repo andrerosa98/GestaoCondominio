@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 
 public class Usuario {
 
+    private int id;
     private String nome;
     private String email;
     private String senha;
@@ -91,6 +92,14 @@ public class Usuario {
 
     public void setIdade(int idade) {
         this.idade = idade;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
 

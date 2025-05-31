@@ -1,4 +1,6 @@
 package com.gestaoCondominio.service;
+import com.gestaoCondominio.controller.Menu;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -7,28 +9,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Scanner;
 import java.sql.SQLException;
-
-class SolicitacaoReserva{
-    private int id;
-    private String area;
-    private LocalDateTime dataHora;
-    private int duracao;
-
-    public SolicitacaoReserva(int id, String area, LocalDateTime dataHora, int duracao) {
-        this.id = id;
-        this.area = area;
-        this.dataHora = dataHora;
-        this.duracao = duracao;
-    }
-
-    public String toString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, d 'de' MMMM 'de' yyyy 'às' HH:mm", new Locale("pt", "BR"));
-        String dataHoraFormatada = dataHora.format(formatter);
-
-        return "Área: " + area + "\nData e hora: " + dataHoraFormatada +
-               "\nDuração: " + duracao + " hora(s)";
-    }
-}
 
 public class ReservaAreaComum {
     public static void realizarReserva(String tipoUsuario) throws SQLException {
@@ -129,7 +109,7 @@ public class ReservaAreaComum {
 
     private static void voltarAoMenu(String tipoUsuario) throws SQLException {
         if ("condomino".equals(tipoUsuario)) {
-            Menu.condomino();
+            Menu.condomino(null);
         } else if ("sindico".equals(tipoUsuario)) {
             Menu.sindico();
         }
