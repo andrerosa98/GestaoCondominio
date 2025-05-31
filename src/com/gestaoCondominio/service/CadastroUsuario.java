@@ -1,4 +1,4 @@
-//package com.gestaoCondominio.service;
+package com.gestaoCondominio.service;//package com.gestaoCondominio.service;
 
 import java.io.Console;
 import java.sql.Connection;
@@ -8,6 +8,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
+
+import com.gestaoCondominio.service.ConexaoBD;
 import org.mindrot.jbcrypt.BCrypt; //novo
 
 

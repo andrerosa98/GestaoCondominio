@@ -8,6 +8,7 @@ public class Usuario {
     private String tipoUsuario;
     private String cpf;
     private String dataNascimento;
+    private int idade;
 
     public Usuario(String nome, String email, String senha, String tipoUsuario, String cpf, String dataNascimento) {
         this.nome = nome;
@@ -68,6 +69,14 @@ public class Usuario {
 
     public void setDataNascimento(String dataNascimento) {
         this.dataNascimento = dataNascimento;
+    }
+
+    public int getIdade() {
+        return idade;
+    }
+
+    public void setIdade(int idade) {
+        this.idade = idade;
     }
 }
 
