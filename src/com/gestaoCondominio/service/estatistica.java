@@ -15,6 +15,7 @@ public class estatistica
         float totalMoradores = listaUsuarios.size();
         Usuario usuario = new Usuario();
         //usuario.getIdade // precisa criar em usuario esse get
+        int i;
         for (i = 0; i< listaUsuarios.size(); i++) {
                     usuario = listaUsuarios.get(i);
                     if (usuario.getIdade() <= 12) {faixa1 ++;} 
@@ -23,7 +24,7 @@ public class estatistica
                     else if (usuario.getIdade() >= 65) {faixa4 ++;}
                     //jogar dentro das faixas
         }
-        usuario = listaUsuarios.get(i) 
+        usuario = listaUsuarios.get(i); 
 
         
         //Scanner dado = new Scanner(System.in);
