@@ -16,8 +16,8 @@ public class Main {
             System.out.println("------------------------");
             switch (opcao) {
                 case 1:
-                    CadastroUsuario.Cadastro();
-                    CadastroUsuario.Continuar();
+                    CadastroUsuario.cadastro();
+                    CadastroUsuario.continuar();
                     break;
                 case 2:
 

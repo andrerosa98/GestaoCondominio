@@ -9,7 +9,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
-import com.gestaoCondominio.service.ConexaoBD;
 import org.mindrot.jbcrypt.BCrypt; //novo
 
 
@@ -33,7 +32,7 @@ public class CadastroUsuario {
         }
     }
 
-    public static void Cadastro() {
+    public static void cadastro() {
 
         String nome;
         String email;
@@ -46,8 +45,13 @@ public class CadastroUsuario {
 
         System.out.println("Cadastro de Usuário");
 
+
         System.out.print("Nome: ");
         nome = input.nextLine();
+        while (nome.isEmpty()) {
+            System.out.print("Nome não pode ser vazio. Digite novamente: ");
+            nome = input.nextLine();
+        }
 
         System.out.print("Email: ");
         email = input.nextLine();
@@ -91,12 +95,23 @@ public class CadastroUsuario {
         CadastroUsuario.cadastrarUsuario(nome, email, senha, cpf, dataNascimentoFinal.toString());
     }
 
-    public static void Continuar(){
+    public static void continuar(){
         Scanner input = new Scanner(System.in);
         System.out.print("Deseja cadastrar outro usuário? (1 - Sim, 0 - Não): ");
         int continuar = input.nextInt();
         while (continuar == 1) {
-            CadastroUsuario.Cadastro();
+            CadastroUsuario.cadastro();
+            System.out.print("Deseja cadastrar outro usuário? (1 - Sim, 0 - Não): ");
+            continuar = input.nextInt();
+        }
+    }
+
+    public static void continuarNovo(){
+        Scanner input = new Scanner(System.in);
+        System.out.print("Deseja cadastrar um novo usuário? (1 - Sim, 0 - Não): ");
+        int continuar = input.nextInt();
+        while (continuar == 1) {
+            CadastroUsuario.cadastro();
             System.out.print("Deseja cadastrar outro usuário? (1 - Sim, 0 - Não): ");
             continuar = input.nextInt();
         }

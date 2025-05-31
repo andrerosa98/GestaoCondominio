@@ -1,4 +1,4 @@
-//package com.gestaoCondominio.service;
+package com.gestaoCondominio.service;//package com.gestaoCondominio.service;
 import java.util.Scanner;
 
 import com.gestaoCondominio.service.Login;
@@ -17,30 +17,27 @@ public class MenuAIdentificaUsuario {
 
         System.out.println("Bem-vindo ao sistema de gestão do condomínio");
 
-        System.out.println("Digite o seu e-mail: ");
+        System.out.print("Digite o seu e-mail: ");
         email = dado.nextLine();
-        System.out.println("Digite a senha:  ");
+        System.out.print("Digite a senha:  ");
         senha = dado.nextLine();
-        senha = BCrypt.hashpw(senha, BCrypt.gensalt());
-        Usuario usuario = Login.LoginUsuario(email, senha);
-        
-
-        String tipoUsuario = usuario.getTipoUsuario();
+        Usuario usuario = Login.loginUsuario(email, senha);
 
         if (usuario != null) {
-            //no arquivo login, verifica se o usuario é nulo ou nao
-
-        if (tipoUsuario.equals("condomino")) {
-            //entrar no menu de condominos (c)
-
+            if ("condomino".equals(usuario.getTipoUsuario())) {
+                // Menu condomino
+                System.out.println("Bem-vindo, " + usuario.getNome() + "!");
+                // Lógica para menu do condomino
+            } else if ("sindico".equals(usuario.getTipoUsuario())) {
+                // Menu sindico
+                System.out.println("Bem-vindo, síndico " + usuario.getNome() + "!");
+                // Lógica para menu do síndico
+            }
+        } else {
+            System.out.println("Usuário não cadastrado ou senha incorreta");
+            CadastroUsuario.continuarNovo();
         }
-        else if (tipoUsuario.equals("sindico")) {
-            //entrar no menu do síndico (d)
-        }}
-        else {
-            System.out.println("Usuário não cadastrado");
-            //entrar no menu do novo usuário (b)
-        }
+
     }
 
 

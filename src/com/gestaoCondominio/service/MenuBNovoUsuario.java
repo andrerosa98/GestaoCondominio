@@ -1,16 +1,7 @@
 
-import java.io.Console;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 import com.gestaoCondominio.service.CadastroUsuario;
-import org.mindrot.jbcrypt.BCrypt; //novo
-import java.util.Scanner;
 
 import com.gestaoCondominio.model.Usuario;
 //import com.gestaoCondominio.service.CadastroUsuario;
@@ -24,10 +15,10 @@ public class MenuBNovoUsuario {
         System.out.println("Usuário não cadastrado. Realize o seu cadastro a seguir: ");
 
         CadastroUsuario cadastroUsuario = new CadastroUsuario();
-        cadastroUsuario.Cadastro();
+        cadastroUsuario.cadastro();
 
 
-        System.out.println(" Cadastro realizado com sucesso. Aguarde a aprovação para acessar os serviços");
+        System.out.println(" cadastro realizado com sucesso. Aguarde a aprovação para acessar os serviços");
     }
     
 

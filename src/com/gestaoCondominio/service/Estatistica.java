@@ -7,7 +7,7 @@ import com.gestaoCondominio.model.Usuario;
 
 import static com.gestaoCondominio.service.Relatorio.relatorioGeral;
 
-public class estatistica
+public class Estatistica
 {
     public static void main (String[] args) throws SQLException {
         //declaração de variáveis

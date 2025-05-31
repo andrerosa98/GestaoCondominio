@@ -20,7 +20,12 @@ public class ConexaoBD {
         String usuario = pv.getProperty("bd.user");
         String senha = pv.getProperty("bd.password");
 
-    return DriverManager.getConnection(url, usuario, senha);
+        try {
+            return DriverManager.getConnection(url, usuario, senha);
+        } catch (SQLException e) {
+            throw new SQLException("Falha ao conectar ao banco de dados: " + e.getMessage());
+        }
+
     }
 
 }

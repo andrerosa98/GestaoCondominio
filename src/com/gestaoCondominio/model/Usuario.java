@@ -1,5 +1,9 @@
 package com.gestaoCondominio.model;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+
 public class Usuario {
 
     private String nome;
@@ -21,6 +25,16 @@ public class Usuario {
 
     public Usuario(){ //novo
 
+    }
+
+    public int calcularIdade(){
+        if (dataNascimento == null || dataNascimento.isEmpty()) {
+            return 0; // Retorna 0 se a data de nascimento não estiver definida
+        }
+
+        LocalDate dataNasc = LocalDate.parse(dataNascimento, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        LocalDate hoje = LocalDate.now();
+        return Period.between(dataNasc, hoje).getYears();
     }
 
     public String getNome() {
