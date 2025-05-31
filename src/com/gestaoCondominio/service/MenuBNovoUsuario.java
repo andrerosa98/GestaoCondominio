@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
+
+import com.gestaoCondominio.service.CadastroUsuario;
 import org.mindrot.jbcrypt.BCrypt; //novo
 import java.util.Scanner;
 

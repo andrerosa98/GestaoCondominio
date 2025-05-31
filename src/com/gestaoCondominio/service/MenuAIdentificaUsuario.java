@@ -1,5 +1,7 @@
 //package com.gestaoCondominio.service;
 import java.util.Scanner;
+
+import com.gestaoCondominio.service.Login;
 import org.mindrot.jbcrypt.BCrypt;
 
 import com.gestaoCondominio.model.Usuario;

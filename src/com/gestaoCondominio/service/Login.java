@@ -1,3 +1,5 @@
+package com.gestaoCondominio.service;
+
 import java.io.Console;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,6 +10,7 @@ import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 import com.gestaoCondominio.model.Usuario;
+import com.gestaoCondominio.service.ConexaoBD;
 
 import java.sql.ResultSet;
 
@@ -22,7 +25,7 @@ public class Login {
     
 
     try (Connection conexao = ConexaoBD.getConexao();
-        PreparedStatement stmt = conexao.prepareStatement(sql)) {
+         PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
              stmt.setString(1, email);
              ResultSet rs = stmt.executeQuery();

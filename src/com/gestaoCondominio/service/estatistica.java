@@ -1,15 +1,17 @@
-//import java.util.Scanner;
+package com.gestaoCondominio.service;//import java.util.Scanner;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.gestaoCondominio.model.Usuario;
 
+import static com.gestaoCondominio.service.Relatorio.relatorioGeral;
+
 public class estatistica
 {
-    public static void main (String[] args)
-    {
+    public static void main (String[] args) throws SQLException {
         //declaração de variáveis
-        ArrayList<Usuario> listaUsuarios = relatoriogeral();
+        ArrayList<Usuario> listaUsuarios = relatorioGeral();
         float faixa1 = 0 , faixa2 = 0 , faixa3 = 0 , faixa4 = 0 ;
         float percCrianca, percAdolescente, percAdulto, percIdoso;
         float totalMoradores = listaUsuarios.size();
@@ -24,7 +26,7 @@ public class estatistica
                     else if (usuario.getIdade() >= 65) {faixa4 ++;}
                     //jogar dentro das faixas
         }
-        usuario = listaUsuarios.get(i); 
+
 
         
         //Scanner dado = new Scanner(System.in);
