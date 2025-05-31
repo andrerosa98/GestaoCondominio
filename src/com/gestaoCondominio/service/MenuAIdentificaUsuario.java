@@ -1,4 +1,4 @@
-package com.gestaoCondominio.service;
+//package com.gestaoCondominio.service;
 import java.util.Scanner;
 import org.mindrot.jbcrypt.BCrypt;
 

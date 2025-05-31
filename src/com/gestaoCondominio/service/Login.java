@@ -7,25 +7,32 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
+import com.gestaoCondominio.model.Usuario;
+
+import java.sql.ResultSet;
+
  
 public class Login {
     String email;
     String senha;
-    Usuario  usuario = new Usuario();
 
-    public usuario LoginUsuario ( String email, String senha) {
-        String sql = "SELECT email, senha FROM usuarios";
+    public static Usuario LoginUsuario ( String email, String senha) {
+        Usuario usuario = new Usuario();
+        String sql = "SELECT * FROM usuarios WHERE email = ?";
     
 
     try (Connection conexao = ConexaoBD.getConexao();
         PreparedStatement stmt = conexao.prepareStatement(sql)) {
-             ResultSet = stmt.executeQuery();
+
+             stmt.setString(1, email);
+             ResultSet rs = stmt.executeQuery();
+
              if (rs.next()) {
                 usuario.setNome(rs.getString("nome"));
                 usuario.setEmail(rs.getString("email"));
                 usuario.setSenha(rs.getString("senha"));
                 usuario.setTipoUsuario(rs.getString("tipoUsuario"));
-                usuario.setcpf(rs.getString("cpf"));
+                usuario.setCpf(rs.getString("cpf"));
                 usuario.setDataNascimento(rs.getString("dataNascimento"));
 
                 return usuario;
@@ -37,13 +44,13 @@ public class Login {
              }
 
 
-             return null;
              
 
         }
         catch (SQLException erro) {
             System.err.println(" Erro ao acessar o Banco de Dados" + erro.getMessage());
         }
+         return null;
     }
 
 

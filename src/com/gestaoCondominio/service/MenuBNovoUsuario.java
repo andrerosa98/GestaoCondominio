@@ -11,7 +11,7 @@ import org.mindrot.jbcrypt.BCrypt; //novo
 import java.util.Scanner;
 
 import com.gestaoCondominio.model.Usuario;
-import com.gestaoCondominio.service.CadastroUsuario;
+//import com.gestaoCondominio.service.CadastroUsuario;
 
 public class MenuBNovoUsuario {
     Usuario novoUsuario = new Usuario();
