@@ -20,6 +20,7 @@ public class Usuario {
     private String cpf;
     private String dataNascimento;
     private int idade;
+    private String apto; // Novo campo para o número do apartamento
 
     public Usuario(String nome, String email, String senha, String tipoUsuario, String cpf, String dataNascimento) {
         this.nome = nome;
@@ -30,16 +31,14 @@ public class Usuario {
         this.dataNascimento = dataNascimento;
     }
 
-    public Usuario(){ //novo
-
+    public Usuario() {
     }
 
-    public int calcularIdade(){
+    public int calcularIdade() {
         if (dataNascimento == null || dataNascimento.isEmpty()) {
-            return 0; // Retorna 0 se a data de nascimento não estiver definida
+            return 0;
         }
-
-        LocalDate dataNasc = LocalDate.parse(dataNascimento, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        LocalDate dataNasc = LocalDate.parse(dataNascimento, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         LocalDate hoje = LocalDate.now();
         return Period.between(dataNasc, hoje).getYears();
     }
@@ -108,6 +107,14 @@ public class Usuario {
         this.id = id;
     }
 
+    public String getApto() {
+        return apto;
+    }
+
+    public void setApto(String apto) {
+        this.apto = apto;
+    }
+
     public static int getIdUsuario(String email) {
         String sql = "SELECT id_usuario FROM usuarios WHERE email = ?";
         try (Connection conexao = ConexaoBD.getConexao();
@@ -122,6 +129,16 @@ public class Usuario {
         }
         return 0;
     }
+
+    public String getDataNascimentoFormatada() {
+        if (dataNascimento == null || dataNascimento.isEmpty()) {
+            return "-";
+        }
+        try {
+            LocalDate data = LocalDate.parse(dataNascimento, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            return data.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        } catch (Exception e) {
+            return dataNascimento; // Retorna como está se não conseguir converter
+        }
+    }
 }
-
-

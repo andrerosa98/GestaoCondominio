@@ -46,8 +46,9 @@ public class Menu {
 
     }
 
-    public static void condomino(Usuario usuario){
+    public static void condomino(Usuario usuario) throws SQLException {
         Usuario usuarioLogado = usuario;
+        Scanner input = new Scanner(System.in);
         System.out.println("------------------------------");
         System.out.println("Sistema GestCondo - Condôminos");
         System.out.println("Menu");
@@ -56,7 +57,8 @@ public class Menu {
         System.out.println("3 - Cadastrar Usuário");
         System.out.println("0 - Sair");
         System.out.print("Digite a opção desejada: ");
-        int opcao = new Scanner(System.in).nextInt();
+        int opcao = input.nextInt();
+        input.nextLine(); // Limpa o buffer do scanner
         switch (opcao){
             case 1:
                 try {
@@ -72,8 +74,6 @@ public class Menu {
                 break;
             case 3:
                 CadastroUsuario.cadastroPorCondomino(usuarioLogado);
-                condomino(usuarioLogado);
-                CadastroUsuario.cadastro();
                 condomino(usuarioLogado);
                 break;
             case 0:

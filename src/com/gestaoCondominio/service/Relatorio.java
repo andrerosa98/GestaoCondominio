@@ -11,27 +11,28 @@ import com.gestaoCondominio.model.Usuario;
 public class Relatorio {
 
     public static ArrayList<Usuario> relatorioGeral() throws SQLException {
-        String sql = "SELECT * FROM usuarios";
+        String sql = "SELECT u.*, a.numero AS apartamento " +
+                "FROM usuarios u " +
+                "JOIN usuarios_apartamentos ua ON u.id_usuario = ua.id_usuario " +
+                "JOIN apartamentos a ON ua.id_apartamento = a.id_apartamento";
         ArrayList<Usuario> listaUsuarios = new ArrayList<>();
-        
 
         try (Connection conexao = ConexaoBD.getConexao();
              PreparedStatement stmt = conexao.prepareStatement(sql)) {
-                ResultSet rs = stmt.executeQuery();
-                while(rs.next()) {
-                    Usuario usuario = new Usuario();
-                    // apto usuario.setApto(rs.getString("apto"));  ----> implementar depois que houver essa tabela
-                    usuario.setNome(rs.getString("nome"));
-                    usuario.setEmail(rs.getString("email"));
-                    usuario.setCpf(rs.getString("cpf"));
-                    usuario.setDataNascimento(rs.getString("data_nascimento"));
-                    usuario.setIdade(rs.getInt("idade"));
-
-
-                    listaUsuarios.add(usuario);
-                    
-                } return listaUsuarios;
-             }
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()) {
+                Usuario usuario = new Usuario();
+                usuario.setNome(rs.getString("nome"));
+                usuario.setEmail(rs.getString("email"));
+                usuario.setCpf(rs.getString("cpf"));
+                usuario.setDataNascimento(rs.getString("data_nascimento"));
+                usuario.setIdade(rs.getInt("idade"));
+                // Adiciona o número do apartamento como atributo extra (se desejar, crie o campo em Usuario)
+                usuario.setApto(rs.getString("apartamento"));
+                listaUsuarios.add(usuario);
+            }
+            return listaUsuarios;
+        }
     }
 
     public static void listaCondominos() throws SQLException {
@@ -39,16 +40,14 @@ public class Relatorio {
         System.out.println("+-----------------+------------------------------------------+------------------------------------------+----------------+-------------------+--------+");
         System.out.println("| APTO            | NOME                                     | E-MAIL                                   | CPF            | DATA NASCIMENTO   | IDADE  |");
         System.out.println("+-----------------+------------------------------------------+------------------------------------------+----------------+-------------------+--------+");
-        for (int i = 0; i < listaUsuarios.size(); i++) {
-            Usuario usuario = listaUsuarios.get(i);
+        for (Usuario usuario : listaUsuarios) {
             System.out.printf("| %-15s | %-40s | %-40s | %-14s | %-17s | %-6d |\n",
-                    "Apto", // implementar depois que tiver a tabela de apto
+                    usuario.getApto() != null ? usuario.getApto() : "-",
                     usuario.getNome(),
                     usuario.getEmail(),
                     usuario.getCpf(),
-                    usuario.getDataNascimento(),
+                    usuario.getDataNascimentoFormatada(),
                     usuario.getIdade());
-
         }
         System.out.println("+-----------------+------------------------------------------+------------------------------------------+----------------+-------------------+--------+");
     }
