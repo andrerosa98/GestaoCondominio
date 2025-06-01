@@ -37,7 +37,7 @@ public class Menu {
                 Menu.condomino(usuario);
             } else if ("sindico".equals(usuario.getTipoUsuario())) {
                 System.out.println("Bem-vindo, síndico " + usuario.getNome() + "!");
-                Menu.sindico();
+                Menu.sindico(usuario);
             }
         } else {
             System.out.println("Usuário não cadastrado ou senha incorreta");
@@ -59,9 +59,8 @@ public class Menu {
         int opcao = new Scanner(System.in).nextInt();
         switch (opcao){
             case 1:
-
                 try {
-                    ReservaAreaComum.realizarReserva("condomino");
+                    ReservaAreaComum.realizarReserva("condomino", usuarioLogado);
                 } catch (SQLException e) {
                     System.out.println("Erro ao processar a reserva: " + e.getMessage());
                     condomino(usuarioLogado); // Volta ao menu de condômino em caso de erro
@@ -87,7 +86,8 @@ public class Menu {
         }
     }
 
-    public static void sindico() throws SQLException {
+    public static void sindico(Usuario usuario) throws SQLException {
+        Usuario usuarioLogado = usuario;
         System.out.println("------------------------");
         System.out.println("Sistema GestCondo");
         System.out.println("Menu");
@@ -105,37 +105,38 @@ public class Menu {
         switch (opcao){
             case 1:
                 CadastroUsuario.cadastro();
-                sindico(); // Retorna ao menu do síndico
+                sindico(usuarioLogado); // Retorna ao menu do síndico
                 break;
             case 2:
-                ReservaAreaComum.realizarReserva("sindico");
+
+                ReservaAreaComum.realizarReserva("sindico", usuarioLogado);
                 break;
             case 3:
                 System.out.println("Em desenvolvimento...");
-                sindico(); // Retorna ao menu do síndico
+                sindico(usuarioLogado); // Retorna ao menu do síndico
                 break;
             case 4:
                 System.out.println("Em desenvolvimento...");
-                sindico(); // Retorna ao menu do síndico
+                sindico(usuarioLogado); // Retorna ao menu do síndico
                 break;
             case 5:
-                System.out.println("Em desenvolvimento...");
-                sindico(); // Retorna ao menu do síndico
+                ReservaAreaComum.aprovarReservasPendentes();
+                sindico(usuarioLogado); // Retorna ao menu do síndico
                 break;
             case 6:
                 System.out.println("Em desenvolvimento...");
-                sindico(); // Retorna ao menu do síndico
+                sindico(usuarioLogado); // Retorna ao menu do síndico
                 break;
             case 7:
                 Menu.relatorios();
-                sindico(); // Retorna ao menu do síndico após sair dos relatórios
+                sindico(usuarioLogado); // Retorna ao menu do síndico após sair dos relatórios
                 break;
             case 0:
                 System.out.println("Saindo...");
                 break;
             default:
                 System.out.println("Opção inválida. Tente novamente.");
-                sindico(); // Retorna ao menu do síndico em caso de opção inválida
+                sindico(usuarioLogado); // Retorna ao menu do síndico em caso de opção inválida
                 break;
         }
     }

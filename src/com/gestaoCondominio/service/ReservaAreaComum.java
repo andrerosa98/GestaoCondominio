@@ -1,6 +1,10 @@
 package com.gestaoCondominio.service;
 import com.gestaoCondominio.controller.Menu;
+import com.gestaoCondominio.model.Usuario;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,15 +15,15 @@ import java.util.Scanner;
 import java.sql.SQLException;
 
 public class ReservaAreaComum {
-    public static void realizarReserva(String tipoUsuario) throws SQLException {
+    public static void realizarReserva(String tipoUsuario, Usuario usuarioLogado) throws SQLException {
         int opcaoArea;
         int ano;
         int mes;
-        int valorDiaSemana;
-        int espacamento;
         int dia;
-        int hora;
-        int minuto;
+        int idArea;
+        int idUsuario = usuarioLogado.getId();
+        int espacamento;
+        String areaEscolhida;
 
         Scanner dado = new Scanner(System.in);
 
@@ -32,7 +36,7 @@ public class ReservaAreaComum {
         opcaoArea = dado.nextInt();
         dado.nextLine();
 
-        String areaEscolhida;
+        idArea = opcaoArea;
         switch (opcaoArea) {
             case 1:
                 areaEscolhida = "Salão de Festas";
@@ -68,8 +72,8 @@ public class ReservaAreaComum {
         System.out.println("\nCalendário de " + nomeMes + " " + ano);
         System.out.println("Dom Seg Ter Qua Qui Sex Sab");
 
-        valorDiaSemana = diaSemana.getValue();
-        espacamento = (valorDiaSemana % 7);
+
+        espacamento = (diaSemana.getValue() % 7);
 
         for (int i = 0; i < espacamento; i++) {
             System.out.print("    ");
@@ -86,32 +90,100 @@ public class ReservaAreaComum {
         System.out.print("Informe o dia da reserva: ");
         dia = dado.nextInt();
 
-        System.out.print("Informe a hora da reserva (0-23): ");
-        hora = dado.nextInt();
+        LocalDate dataReserva = LocalDate.of(ano, mes, dia);
 
-        System.out.print("Informe os minutos da reserva: ");
-        minuto = dado.nextInt();
+        if (reservaDuplicada(idUsuario, dataReserva)) {
+            System.out.println("Você já possui uma reserva para esta data. Reserva não realizada.");
+            voltarAoMenu(tipoUsuario);
+            return;
+        }
 
-        System.out.print("Informe a duração da reserva (em horas): ");
-        int duracao = dado.nextInt();
-
-        LocalDateTime dataHoraReserva = LocalDateTime.of(ano, mes, dia, hora, minuto);
-
-        SolicitacaoReserva reserva = new SolicitacaoReserva(1, areaEscolhida, dataHoraReserva, duracao);
-        //falta adaptar o ID da reserva para cair no menu do sindico
-        System.out.println("\nReserva solitada com sucesso:");
-        System.out.println(reserva);
-        System.out.println("\nAguardar aprovação do sindico para liberação da reserva.");
-
-        // Retorna ao menu apropriado após concluir a reserva
+        inserirReserva(idUsuario, idArea, dataReserva);
+        System.out.println("Reserva realizada com sucesso para " + areaEscolhida + " no dia " + dia + " de " + nomeMes + " de " + ano + ".");
+        System.out.println("Aguardar aprovação do sindico para liberação da reserva.");
         voltarAoMenu(tipoUsuario);
+    }
+
+    private static boolean reservaDuplicada(int idUsuario, LocalDate dataReserva) {
+        String sql = "SELECT COUNT(*) FROM reservas WHERE id_usuario = ? AND DATE(data_reserva) = ?";
+        try (Connection conexao = ConexaoBD.getConexao();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setInt(1, idUsuario);
+            stmt.setDate(2, java.sql.Date.valueOf(dataReserva));
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao verificar duplicidade de reserva: " + e.getMessage());
+        }
+        return false;
+    }
+
+    private static void inserirReserva(int idUsuario, int idArea, LocalDate dataReserva) {
+        String sql = "INSERT INTO reservas (id_usuario, id_area, data_reserva, status_reserva) VALUES (?, ?, ?, 'pendente')";
+        try (Connection conexao = ConexaoBD.getConexao();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setInt(1, idUsuario);
+            stmt.setInt(2, idArea);
+            stmt.setDate(3, java.sql.Date.valueOf(dataReserva));
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Erro ao inserir reserva: " + e.getMessage());
+        }
     }
 
     private static void voltarAoMenu(String tipoUsuario) throws SQLException {
         if ("condomino".equals(tipoUsuario)) {
             Menu.condomino(null);
         } else if ("sindico".equals(tipoUsuario)) {
-            Menu.sindico();
+            Menu.sindico(null);
+        }
+    }
+
+    public static void aprovarReservasPendentes() throws SQLException {
+        String sql = "SELECT r.id_reserva, u.nome, a.nome_area, r.data_reserva " +
+                "FROM reservas r " +
+                "JOIN usuarios u ON r.id_usuario = u.id_usuario " +
+                "JOIN areas_comuns a ON r.id_area = a.id_area " +
+                "WHERE r.status_reserva = 'pendente'";
+        try (Connection conexao = ConexaoBD.getConexao();
+             PreparedStatement stmt = conexao.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            Scanner scanner = new Scanner(System.in);
+            boolean encontrou = false;
+            while (rs.next()) {
+                encontrou = true;
+                int idReserva = rs.getInt("id_reserva");
+                String nomeUsuario = rs.getString("nome");
+                String nomeArea = rs.getString("nome_area");
+                String dataReserva = rs.getString("data_reserva");
+
+                System.out.printf("Reserva #%d - %s - %s em %s\n", idReserva, nomeUsuario, nomeArea, dataReserva);
+                System.out.print("Aprovar (1) / Rejeitar (2) / Pular (0): ");
+                int opcao = scanner.nextInt();
+                if (opcao == 1) {
+                    atualizarStatusReserva(idReserva, "aprovada");
+                    System.out.println("Reserva aprovada.");
+                } else if (opcao == 2) {
+                    atualizarStatusReserva(idReserva, "rejeitada");
+                    System.out.println("Reserva rejeitada.");
+                }
+            }
+            if (!encontrou) {
+                System.out.println("Não há reservas pendentes para aprovação.");
+            }
+        }
+    }
+
+    private static void atualizarStatusReserva(int idReserva, String status) throws SQLException {
+        String sql = "UPDATE reservas SET status_reserva = ? WHERE id_reserva = ?";
+        try (Connection conexao = ConexaoBD.getConexao();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setString(1, status);
+            stmt.setInt(2, idReserva);
+            stmt.executeUpdate();
         }
     }
 }
