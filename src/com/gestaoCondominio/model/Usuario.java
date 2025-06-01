@@ -1,5 +1,11 @@
 package com.gestaoCondominio.model;
 
+import com.gestaoCondominio.service.ConexaoBD;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -100,6 +106,21 @@ public class Usuario {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public static int getIdUsuario(String email) {
+        String sql = "SELECT id_usuario FROM usuarios WHERE email = ?";
+        try (Connection conexao = ConexaoBD.getConexao();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id_usuario");
+            }
+        } catch (SQLException erro) {
+            System.err.println("Erro ao buscar ID do usuário: " + erro.getMessage());
+        }
+        return 0;
     }
 }
 

@@ -288,18 +288,49 @@ public class CadastroUsuario {
         }
     }
 
-    public static int getIdUsuario(String email) {
-        String sql = "SELECT id_usuario FROM usuarios WHERE email = ?";
+    public static void aprovarUsuariosPendentes() throws SQLException {
+        String sql = "SELECT u.id_usuario, u.nome, u.email, a.numero AS apartamento " +
+                     "FROM usuarios u " +
+                     "JOIN usuarios_apartamentos ua ON u.id_usuario = ua.id_usuario " +
+                     "JOIN apartamentos a ON ua.id_apartamento = a.id_apartamento " +
+                     "WHERE u.status_aprovacao = 'pendente'";
+        try (Connection conexao = ConexaoBD.getConexao();
+             PreparedStatement stmt = conexao.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            Scanner scanner = new Scanner(System.in);
+            boolean encontrou = false;
+            while (rs.next()) {
+                encontrou = true;
+                int idUsuario = rs.getInt("id_usuario");
+                String nome = rs.getString("nome");
+                String email = rs.getString("email");
+                int apartamento = rs.getInt("apartamento");
+
+                System.out.printf("Usuário #%d - %s (%s) - Apartamento: %d\n", idUsuario, nome, email, apartamento);
+                System.out.print("Aprovar (1) / Rejeitar (2) / Pular (0): ");
+                int opcao = scanner.nextInt();
+                if (opcao == 1) {
+                    atualizarStatusUsuario(idUsuario, "aprovado");
+                    System.out.println("Usuário aprovado.");
+                } else if (opcao == 2) {
+                    atualizarStatusUsuario(idUsuario, "reprovado");
+                    System.out.println("Usuário reprovado.");
+                }
+            }
+            if (!encontrou) {
+                System.out.println("Não há usuários pendentes para aprovação.");
+            }
+        }
+    }
+
+    private static void atualizarStatusUsuario(int idUsuario, String status) throws SQLException {
+        String sql = "UPDATE usuarios SET status_aprovacao = ? WHERE id_usuario = ?";
         try (Connection conexao = ConexaoBD.getConexao();
              PreparedStatement stmt = conexao.prepareStatement(sql)) {
-            stmt.setString(1, email);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("id_usuario");
-            }
-        } catch (SQLException erro) {
-            System.err.println("Erro ao buscar ID do usuário: " + erro.getMessage());
+            stmt.setString(1, status);
+            stmt.setInt(2, idUsuario);
+            stmt.executeUpdate();
         }
-        return 0;
     }
 }

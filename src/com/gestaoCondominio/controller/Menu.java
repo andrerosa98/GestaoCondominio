@@ -116,7 +116,7 @@ public class Menu {
                 sindico(usuarioLogado); // Retorna ao menu do síndico
                 break;
             case 4:
-                System.out.println("Em desenvolvimento...");
+                CadastroUsuario.aprovarUsuariosPendentes();
                 sindico(usuarioLogado); // Retorna ao menu do síndico
                 break;
             case 5:
