@@ -16,7 +16,8 @@ CREATE TABLE usuarios (
                           cpf VARCHAR(14) NOT NULL UNIQUE,
                           data_nascimento DATE,
                           data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
-                          status_aprovacao ENUM('pendente', 'aprovado', 'reprovado') DEFAULT 'pendente'
+                          status_aprovacao ENUM('pendente', 'aprovado', 'reprovado') DEFAULT 'pendente',
+                          idade INT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Tabela de áreas comuns
@@ -69,3 +70,39 @@ CREATE TABLE usuarios_apartamentos(
 -- Cria um usuário administrador padrão
 INSERT INTO usuarios (nome, email, senha, tipo_usuario, cpf, data_nascimento, status_aprovacao)
 VALUES ('Administrador', 'teste.condominio@gmail.com', 'admin123', 'sindico', '12345678901', '1990-01-01', 'aprovado');
+
+-- Cria as aáreas comuns
+INSERT INTO areas_comuns (nome_area, descricao)
+VALUES ('Salão de Festas', 'Salão de Festas'), ('Churrasqueira', 'Churrasqueira'), ('Quadra', 'Quadra');
+
+-- ================================================
+-- Seção para configurar o Event Scheduler
+-- ================================================
+
+-- Habilitar o Event Scheduler (se ainda não estiver habilitado)
+-- Nota: Para persistir após reinícios do servidor, adicione 'event_scheduler = ON'
+-- na seção [mysqld] do arquivo de configuração do MySQL (my.cnf ou my.ini)
+SET GLOBAL event_scheduler = ON;
+
+-- Preencher a coluna 'idade' para os usuários existentes (executado uma vez)
+-- Isso garante que a idade esteja correta imediatamente após a criação do banco/inserção de dados.
+UPDATE usuarios
+SET idade = TIMESTAMPDIFF(YEAR, data_nascimento, CURDATE())
+WHERE data_nascimento IS NOT NULL;
+
+DELIMITER //
+
+-- Cria o evento agendado para atualizar a idade diariamente
+CREATE EVENT atualizar_idade_usuarios_diariamente
+    ON SCHEDULE EVERY 1 DAY -- O evento será executado a cada 1 dia (24 horas)
+        STARTS (CURDATE() + INTERVAL 1 DAY + INTERVAL 3 HOUR) -- A primeira execução será amanhã às 03:00 (ajuste o horário conforme preferir)
+    COMMENT 'Atualiza a coluna idade na tabela usuarios com base na data de nascimento e data atual.'
+    DO
+    BEGIN
+        UPDATE usuarios
+        SET idade = TIMESTAMPDIFF(YEAR, data_nascimento, CURDATE())
+        WHERE data_nascimento IS NOT NULL;
+    END;
+//
+
+DELIMITER ;

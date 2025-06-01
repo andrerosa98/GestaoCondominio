@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 import com.gestaoCondominio.model.Usuario;
+import org.mindrot.jbcrypt.BCrypt;
 
 
 
@@ -20,9 +21,11 @@ public class CadastroUsuario {
         try (Connection conexao = ConexaoBD.getConexao();
              PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
+            String senhaHash = BCrypt.hashpw(senha, BCrypt.gensalt());
+
             stmt.setString(1, nome);
             stmt.setString(2, email);
-            stmt.setString(3, senha);
+            stmt.setString(3, senhaHash);
             stmt.setString(4, cpf);
             stmt.setString(5, dataNascimentoFinal);
 

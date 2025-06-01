@@ -26,9 +26,9 @@ public class Menu {
         System.out.println("Bem-vindo ao sistema de gestão do condomínio");
 
         System.out.print("Digite o seu e-mail: ");
-        email =dado.nextLine();
+        email = dado.nextLine();
         System.out.print("Digite a senha:  ");
-        senha =dado.nextLine();
+        senha = dado.nextLine();
         Usuario usuario = Login.loginUsuario(email, senha);
         if(usuario !=null)
         {
