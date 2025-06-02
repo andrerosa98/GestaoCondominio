@@ -1,51 +1,47 @@
-import java.io.Console;
+package com.gestaoCondominio.service;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.Scanner;
+import java.sql.ResultSet;
 
- 
+import com.gestaoCondominio.model.Usuario;
+import org.mindrot.jbcrypt.BCrypt;
+
 public class Login {
-    String email;
-    String senha;
-    Usuario  usuario = new Usuario();
 
-    public usuario LoginUsuario ( String email, String senha) {
-        String sql = "SELECT email, senha FROM usuarios";
-    
+    public static Usuario loginUsuario(String email, String senha) {
+        String sql = "SELECT * FROM usuarios WHERE email = ?";
+        try (Connection conexao = ConexaoBD.getConexao();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
-    try (Connection conexao = ConexaoBD.getConexao();
-        PreparedStatement stmt = conexao.prepareStatement(sql)) {
-             ResultSet = stmt.executeQuery();
-             if (rs.next()) {
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                String senhaHash = rs.getString("senha");
+                String statusAprovacao = rs.getString("status_aprovacao");
+                if (!"aprovado".equalsIgnoreCase(statusAprovacao)) {
+                    System.out.println("Usuário não aprovado. Aguarde aprovação do síndico.");
+                    return null;
+                }
+                if (!BCrypt.checkpw(senha, senhaHash)) {
+                    System.out.println("Senha incorreta");
+                    return null;
+                }
+                Usuario usuario = new Usuario();
+                usuario.setId(rs.getInt("id_usuario"));
                 usuario.setNome(rs.getString("nome"));
                 usuario.setEmail(rs.getString("email"));
-                usuario.setSenha(rs.getString("senha"));
-                usuario.setTipoUsuario(rs.getString("tipoUsuario"));
-                usuario.setcpf(rs.getString("cpf"));
-                usuario.setDataNascimento(rs.getString("dataNascimento"));
-
+                usuario.setTipoUsuario(rs.getString("tipo_usuario"));
+                usuario.setCpf(rs.getString("cpf"));
+                usuario.setDataNascimento(rs.getString("data_nascimento"));
+                usuario.setIdade(rs.getInt("idade"));
                 return usuario;
-                
-                
-
-             }else {
-                System.out.println("Usuário não encontrado");
-             }
-
-
-             return null;
-             
-
+            }
+        } catch (SQLException erro) {
+            System.err.println("Erro ao acessar o Banco de Dados: " + erro.getMessage());
         }
-        catch (SQLException erro) {
-            System.err.println(" Erro ao acessar o Banco de Dados" + erro.getMessage());
-        }
+        return null;
     }
-
-
-    
 }

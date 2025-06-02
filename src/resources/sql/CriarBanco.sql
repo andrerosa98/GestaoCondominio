@@ -16,7 +16,8 @@ CREATE TABLE usuarios (
                           cpf VARCHAR(14) NOT NULL UNIQUE,
                           data_nascimento DATE,
                           data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
-                          status_aprovacao ENUM('pendente', 'aprovado', 'reprovado') DEFAULT 'pendente'
+                          status_aprovacao ENUM('pendente', 'aprovado', 'reprovado') DEFAULT 'pendente',
+                          idade INT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Tabela de áreas comuns
@@ -32,11 +33,11 @@ CREATE TABLE reservas (
                           id_reserva INT AUTO_INCREMENT PRIMARY KEY,
                           id_usuario INT NOT NULL,
                           id_area INT NOT NULL,
-                          data_reserva DATETIME NOT NULL,
+                          data_reserva DATE NOT NULL,
                           status_reserva ENUM('pendente', 'aprovada', 'rejeitada') DEFAULT 'pendente',
                           observacoes TEXT,
-                          CONSTRAINT fk_usuarios_reservas FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario),
-                          CONSTRAINT fk_areas_comuns_reservas FOREIGN KEY (id_area) REFERENCES areas_comuns(id_area)
+                          CONSTRAINT fk_usuarios_reservas FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
+                          CONSTRAINT fk_areas_comuns_reservas FOREIGN KEY (id_area) REFERENCES areas_comuns(id_area) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Tabela de mudanças
@@ -46,30 +47,62 @@ CREATE TABLE mudancas (
                           data_mudanca DATETIME NOT NULL,
                           status_mudanca ENUM('pendente', 'aprovada', 'rejeitada') DEFAULT 'pendente',
                           observacoes TEXT,
-                          CONSTRAINT fk_usuarios_mudancas FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+                          CONSTRAINT fk_usuarios_mudancas FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Tabela de documentos
-CREATE TABLE documentos (
-                            id_documento INT AUTO_INCREMENT PRIMARY KEY,
-                            titulo VARCHAR(100) NOT NULL,
-                            descricao TEXT,
-                            caminho_arquivo VARCHAR(255) NOT NULL,
-                            data_upload DATETIME DEFAULT CURRENT_TIMESTAMP,
+-- Tabela de apartamentos
+CREATE TABLE apartamentos(
+                             id_apartamento INT auto_increment primary key,
+                             numero int not null unique
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Tabela de usuários e apartamentos (n para n)
+CREATE TABLE usuarios_apartamentos(
+                            id INT AUTO_INCREMENT PRIMARY KEY,
                             id_usuario INT NOT NULL,
-                            CONSTRAINT fk_usuarios_documentos FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+                            id_apartamento INT NOT NULL,
+                            tipo_morador ENUM ('proprietario', 'dependente'),
+                            FOREIGN KEY (id_usuario) references usuarios(id_usuario) ON DELETE CASCADE,
+                            FOREIGN KEY (id_apartamento) references apartamentos(id_apartamento) ON DELETE CASCADE
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Tabela de visualizações de documentos
-CREATE TABLE visualizacoes_documentos (
-                                          id_visualizacao INT AUTO_INCREMENT PRIMARY KEY,
-                                          id_usuario INT NOT NULL,
-                                          id_documento INT NOT NULL,
-                                          data_visualizacao DATETIME DEFAULT CURRENT_TIMESTAMP,
-                                          CONSTRAINT fk_usuarios_visualizacoes FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario),
-                                          CONSTRAINT fk_documentos_visualizacoes FOREIGN KEY (id_documento) REFERENCES documentos(id_documento)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Cria um usuário administrador padrão
 INSERT INTO usuarios (nome, email, senha, tipo_usuario, cpf, data_nascimento, status_aprovacao)
 VALUES ('Administrador', 'teste.condominio@gmail.com', 'admin123', 'sindico', '12345678901', '1990-01-01', 'aprovado');
+
+-- Cria as aáreas comuns
+INSERT INTO areas_comuns (nome_area, descricao)
+VALUES ('Salão de Festas', 'Salão de Festas'), ('Churrasqueira', 'Churrasqueira'), ('Quadra', 'Quadra');
+
+-- ================================================
+-- Seção para configurar o Event Scheduler
+-- ================================================
+
+-- Habilitar o Event Scheduler (se ainda não estiver habilitado)
+-- Nota: Para persistir após reinícios do servidor, adicione 'event_scheduler = ON'
+-- na seção [mysqld] do arquivo de configuração do MySQL (my.cnf ou my.ini)
+SET GLOBAL event_scheduler = ON;
+
+-- Preencher a coluna 'idade' para os usuários existentes (executado uma vez)
+-- Isso garante que a idade esteja correta imediatamente após a criação do banco/inserção de dados.
+UPDATE usuarios
+SET idade = TIMESTAMPDIFF(YEAR, data_nascimento, CURDATE())
+WHERE data_nascimento IS NOT NULL;
+
+DELIMITER //
+
+-- Cria o evento agendado para atualizar a idade diariamente
+CREATE EVENT atualizar_idade_usuarios_diariamente
+    ON SCHEDULE EVERY 1 DAY -- O evento será executado a cada 1 dia (24 horas)
+        STARTS (CURDATE() + INTERVAL 1 DAY + INTERVAL 3 HOUR) -- A primeira execução será amanhã às 03:00 (ajuste o horário conforme preferir)
+    COMMENT 'Atualiza a coluna idade na tabela usuarios com base na data de nascimento e data atual.'
+    DO
+    BEGIN
+        UPDATE usuarios
+        SET idade = TIMESTAMPDIFF(YEAR, data_nascimento, CURDATE())
+        WHERE data_nascimento IS NOT NULL;
+    END;
+//
+
+DELIMITER ;
