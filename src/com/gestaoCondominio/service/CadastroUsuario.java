@@ -127,7 +127,7 @@ public class CadastroUsuario {
             input.next();
         }
         numAp = input.nextInt();
-        input.nextLine(); // Limpa o buffer
+        input.nextLine();
 
         while (dataNascimentoFinal == null) {
             try {
@@ -153,19 +153,6 @@ public class CadastroUsuario {
         String tipoMorador = (tipoMoradorOpcao == 2) ? "dependente" : "proprietario";
 
         cadastrarUsuario(nome, email, senha, cpf, dataNascimentoFinal.toString(), numAp, tipoMorador);
-    }
-
-    public static void continuar() throws SQLException {
-        Scanner input = new Scanner(System.in);
-        System.out.print("Deseja cadastrar outro usuário? (1 - Sim, 0 - Não): ");
-        int continuar = input.nextInt();
-        input.nextLine();
-        while (continuar == 1) {
-            cadastro();
-            System.out.print("Deseja cadastrar outro usuário? (1 - Sim, 0 - Não): ");
-            continuar = input.nextInt();
-            input.nextLine();
-        }
     }
 
     public static void continuarNovo() throws SQLException {
@@ -377,7 +364,6 @@ public class CadastroUsuario {
             }
         }
     }
-
     private static void atualizarStatusUsuario(int idUsuario, String status) throws SQLException {
         String sql = "UPDATE usuarios SET status_aprovacao = ? WHERE id_usuario = ?";
         try (Connection conexao = ConexaoBD.getConexao();

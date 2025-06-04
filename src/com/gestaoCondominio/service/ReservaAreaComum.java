@@ -66,7 +66,6 @@ public class ReservaAreaComum {
         LocalDate primeiroDia = anoMes.atDay(1);
         DayOfWeek diaSemana = primeiroDia.getDayOfWeek();
 
-        // Formatando o nome do mês em português
         DateTimeFormatter mesFormatter = DateTimeFormatter.ofPattern("MMMM", new Locale("pt", "BR"));
         String nomeMes = primeiroDia.format(mesFormatter);
 
@@ -164,6 +163,7 @@ public class ReservaAreaComum {
                 System.out.printf("Reserva #%d - %s - %s em %s\n", idReserva, nomeUsuario, nomeArea, dataReserva);
                 System.out.print("Aprovar (1) / Rejeitar (2) / Pular (0): ");
                 int opcao = scanner.nextInt();
+                scanner.nextLine();
                 if (opcao == 1) {
                     atualizarStatusReserva(idReserva, "aprovada");
                     System.out.println("Reserva aprovada.");
