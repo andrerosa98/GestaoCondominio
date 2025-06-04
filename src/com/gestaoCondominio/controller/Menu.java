@@ -3,6 +3,7 @@ package com.gestaoCondominio.controller;
 import com.gestaoCondominio.model.Usuario;
 import com.gestaoCondominio.service.*;
 
+import java.io.Console;
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -22,13 +23,19 @@ public class Menu {
         String email;
         String senha;
         Scanner dado = new Scanner(System.in);
+        Console console = System.console();
 
         System.out.println("Bem-vindo ao sistema de gestão do condomínio");
 
         System.out.print("Digite o seu e-mail: ");
         email = dado.nextLine();
-        System.out.print("Digite a senha:  ");
-        senha = dado.nextLine();
+        if (console != null) {
+            char[] senhaArray = console.readPassword("Senha: ");
+            senha = new String(senhaArray);
+        } else {
+            System.out.print("Senha (não seguro, console não disponível): ");
+            senha = dado.nextLine();
+        }
         Usuario usuario = Login.loginUsuario(email, senha);
         if(usuario !=null)
         {
@@ -88,6 +95,8 @@ public class Menu {
 
     public static void sindico(Usuario usuario) throws SQLException {
         Usuario usuarioLogado = usuario;
+        int opcao;
+
         System.out.println("------------------------");
         System.out.println("Sistema GestCondo");
         System.out.println("Menu");
@@ -100,7 +109,7 @@ public class Menu {
         System.out.println("7 - Relatórios");
         System.out.println("0 - Sair");
         System.out.print("Digite a opção desejada: ");
-        int opcao = new Scanner(System.in).nextInt();
+        opcao = new Scanner(System.in).nextInt();
 
         switch (opcao){
             case 1:
@@ -142,6 +151,8 @@ public class Menu {
     }
 
     public static void relatorios() throws SQLException {
+        int opcao;
+
         System.out.println("------------------------");
         System.out.println("Sistema GestCondo");
         System.out.println("Menu Relatórios");
@@ -149,7 +160,7 @@ public class Menu {
         System.out.println("2 - Estatísticas de Moradores");
         System.out.println("0 - Sair");
         System.out.print("Digite a opção desejada: ");
-        int opcao = new Scanner(System.in).nextInt();
+        opcao = new Scanner(System.in).nextInt();
 
         switch (opcao){
             case 1:
@@ -167,13 +178,15 @@ public class Menu {
     }
 
     public static void maisInformacoes() {
+        int opcao;
+
         System.out.println("------------------------");
         System.out.println("Mais Informações");
         System.out.println("1 - Sobre o Sistema");
         System.out.println("2 - Contato");
         System.out.println("0 - Voltar ao Menu Principal");
         System.out.print("Digite a opção desejada: ");
-        int opcao = new Scanner(System.in).nextInt();
+        opcao = new Scanner(System.in).nextInt();
 
         switch (opcao) {
             case 1:

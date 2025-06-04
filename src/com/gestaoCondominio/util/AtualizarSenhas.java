@@ -9,6 +9,7 @@ public class AtualizarSenhas {
     public static void main(String[] args) throws Exception {
         String sqlSelect = "SELECT id_usuario, senha FROM usuarios";
         String sqlUpdate = "UPDATE usuarios SET senha = ? WHERE id_usuario = ?";
+        String senha;
 
         try (Connection conexao = ConexaoBD.getConexao();
              PreparedStatement stmtSelect = conexao.prepareStatement(sqlSelect);
@@ -17,7 +18,7 @@ public class AtualizarSenhas {
             ResultSet rs = stmtSelect.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("id_usuario");
-                String senha = rs.getString("senha");
+                senha = rs.getString("senha");
                 // Se não está hasheada (bcrypt sempre começa com $2a$, $2b$ ou $2y$)
                 if (!senha.startsWith("$2")) {
                     String hash = BCrypt.hashpw(senha, BCrypt.gensalt());

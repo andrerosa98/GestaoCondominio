@@ -13,17 +13,20 @@ import java.util.Scanner;
 import com.gestaoCondominio.model.Usuario;
 import org.mindrot.jbcrypt.BCrypt;
 
+import static com.gestaoCondominio.model.Usuario.excluirUsuario;
+
 public class CadastroUsuario {
-    public static void cadastrarUsuario(String nome, String email, String senha, String cpf, String dataNascimentoFinal, int idApartamento, String tipoMorador) throws SQLException {
+    public static void cadastrarUsuario(String nome, String email, String senha, String cpf, String dataNascimentoFinal, int numeroApartamento, String tipoMorador) throws SQLException {
         LocalDate dataNasc = LocalDate.parse(dataNascimentoFinal); // yyyy-MM-dd
         int idade = Period.between(dataNasc, LocalDate.now()).getYears();
-        String sql = "INSERT INTO usuarios (nome, email, senha, cpf, data_nascimento, tipo_usuario, idade) VALUES (?, ?, ?, ?, ?, 'condomino', ?)";
+        String sql = "INSERT INTO usuarios (nome, email, senha, cpf, data_nascimento, tipo_usuario, idade, status_aprovacao) VALUES (?, ?, ?, ?, ?, 'condomino', ?, 'pendente')";
 
         try (Connection conexao = ConexaoBD.getConexao();
              PreparedStatement stmt = conexao.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
 
-            String senhaHash = BCrypt.hashpw(senha, BCrypt.gensalt());
+            int idApartamento = garantirApartamento(numeroApartamento, conexao);
 
+            String senhaHash = org.mindrot.jbcrypt.BCrypt.hashpw(senha, org.mindrot.jbcrypt.BCrypt.gensalt());
             stmt.setString(1, nome);
             stmt.setString(2, email);
             stmt.setString(3, senhaHash);
@@ -36,6 +39,10 @@ public class CadastroUsuario {
             int idUsuario = 0;
             if (rs.next()) {
                 idUsuario = rs.getInt(1);
+            }
+            if (idUsuario == 0) {
+                System.err.println("Erro ao obter o ID do usuário cadastrado.");
+                return;
             }
             String sqlRelacao = "INSERT INTO usuarios_apartamentos (id_usuario, id_apartamento, tipo_morador) VALUES (?, ?, ?)";
             try (PreparedStatement stmtRelacao = conexao.prepareStatement(sqlRelacao)) {
@@ -51,6 +58,27 @@ public class CadastroUsuario {
         }
     }
 
+    private static int garantirApartamento(int numeroApartamento, Connection conexao) throws SQLException {
+        String selectSql = "SELECT id_apartamento FROM apartamentos WHERE numero = ?";
+        try (PreparedStatement selectStmt = conexao.prepareStatement(selectSql)) {
+            selectStmt.setInt(1, numeroApartamento);
+            ResultSet rs = selectStmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id_apartamento");
+            }
+        }
+
+        String insertSql = "INSERT INTO apartamentos (numero) VALUES (?)";
+        try (PreparedStatement insertStmt = conexao.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            insertStmt.setInt(1, numeroApartamento);
+            insertStmt.executeUpdate();
+            ResultSet rs = insertStmt.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        throw new SQLException("Não foi possível criar ou obter o apartamento.");
+    }
     public static void cadastro() throws SQLException {
         String nome;
         String email;
@@ -342,7 +370,8 @@ public class CadastroUsuario {
                     System.out.println("Usuário aprovado.");
                 } else if (opcao == 2) {
                     atualizarStatusUsuario(idUsuario, "reprovado");
-                    System.out.println("Usuário reprovado.");
+                    excluirUsuario(idUsuario);
+                    System.out.println("Usuário reprovado e excluído.");
                 }
             }
             if (!encontrou) {

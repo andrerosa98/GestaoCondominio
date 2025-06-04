@@ -141,4 +141,13 @@ public class Usuario {
             return dataNascimento; // Retorna como está se não conseguir converter
         }
     }
+
+    public static void excluirUsuario(int idUsuario) throws SQLException {
+        String sql = "DELETE FROM usuarios WHERE id_usuario = ?";
+        try (Connection conexao = ConexaoBD.getConexao();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setInt(1, idUsuario);
+            stmt.executeUpdate();
+        }
+    }
 }
