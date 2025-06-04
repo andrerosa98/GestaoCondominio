@@ -15,7 +15,8 @@ import java.util.Scanner;
 import java.sql.SQLException;
 
 public class ReservaAreaComum {
-    public static void realizarReserva(String tipoUsuario, Usuario usuarioLogado) throws SQLException {
+
+  public static void realizarReserva(String tipoUsuario, Usuario usuarioLogado) throws SQLException {
         int opcaoArea;
         int ano;
         int mes;
@@ -50,7 +51,7 @@ public class ReservaAreaComum {
             default:
                 System.out.println("Opção inválida. Reserva cancelada.");
                 // Retorna ao menu apropriado após cancelar a reserva
-                voltarAoMenu(tipoUsuario);
+                voltarAoMenu(tipoUsuario, usuarioLogado);
                 return;
         }
 
@@ -94,14 +95,14 @@ public class ReservaAreaComum {
 
         if (reservaDuplicada(idUsuario, dataReserva)) {
             System.out.println("Você já possui uma reserva para esta data. Reserva não realizada.");
-            voltarAoMenu(tipoUsuario);
+            voltarAoMenu(tipoUsuario, usuarioLogado);
             return;
         }
 
         inserirReserva(idUsuario, idArea, dataReserva);
         System.out.println("Reserva realizada com sucesso para " + areaEscolhida + " no dia " + dia + " de " + nomeMes + " de " + ano + ".");
         System.out.println("Aguardar aprovação do sindico para liberação da reserva.");
-        voltarAoMenu(tipoUsuario);
+        voltarAoMenu(tipoUsuario, usuarioLogado);
     }
 
     private static boolean reservaDuplicada(int idUsuario, LocalDate dataReserva) {
@@ -133,11 +134,11 @@ public class ReservaAreaComum {
         }
     }
 
-    private static void voltarAoMenu(String tipoUsuario) throws SQLException {
+    private static void voltarAoMenu(String tipoUsuario, Usuario usuarioLogado) throws SQLException {
         if ("condomino".equals(tipoUsuario)) {
-            Menu.condomino(null);
+            Menu.condomino(usuarioLogado);
         } else if ("sindico".equals(tipoUsuario)) {
-            Menu.sindico(null);
+            Menu.sindico(usuarioLogado);
         }
     }
 

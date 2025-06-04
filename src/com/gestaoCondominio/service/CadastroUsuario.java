@@ -57,7 +57,6 @@ public class CadastroUsuario {
             System.err.println("Erro ao cadastrar usuário: " + erro.getMessage());
         }
     }
-
     private static int garantirApartamento(int numeroApartamento, Connection conexao) throws SQLException {
         String selectSql = "SELECT id_apartamento FROM apartamentos WHERE numero = ?";
         try (PreparedStatement selectStmt = conexao.prepareStatement(selectSql)) {

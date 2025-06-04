@@ -29,7 +29,6 @@ public class Relatorio {
                 usuario.setCpf(rs.getString("cpf"));
                 usuario.setDataNascimento(rs.getString("data_nascimento"));
                 usuario.setIdade(rs.getInt("idade"));
-                // Adiciona o número do apartamento como atributo extra (se desejar, crie o campo em Usuario)
                 usuario.setApto(rs.getString("apartamento"));
                 listaUsuarios.add(usuario);
             }
