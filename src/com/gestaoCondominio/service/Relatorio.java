@@ -5,10 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import com.gestaoCondominio.model.Usuario;
 
 public class Relatorio {
+
 
     public static ArrayList<Usuario> relatorioGeral() throws SQLException {
         String sql = "SELECT u.*, a.numero AS apartamento " +

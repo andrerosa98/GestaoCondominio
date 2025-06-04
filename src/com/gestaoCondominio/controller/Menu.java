@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Menu {
-
     public static void inicial(){
         System.out.println("------------------------");
         System.out.println("Sistema GestCondo");
@@ -65,7 +64,7 @@ public class Menu {
         System.out.println("0 - Sair");
         System.out.print("Digite a opção desejada: ");
         int opcao = input.nextInt();
-        input.nextLine(); // Limpa o buffer do scanner
+        input.nextLine();
         switch (opcao){
             case 1:
                 try {
@@ -152,6 +151,8 @@ public class Menu {
 
     public static void relatorios() throws SQLException {
         int opcao;
+        Scanner input = new Scanner(System.in);
+        String pause;
 
         System.out.println("------------------------");
         System.out.println("Sistema GestCondo");
@@ -165,9 +166,13 @@ public class Menu {
         switch (opcao){
             case 1:
                 Relatorio.listaCondominos();
+                System.out.println("\nAperte ENTER para continuar...");
+                pause = input.nextLine();
                 break;
             case 2:
                 Estatistica.moradores();
+                System.out.println("\nAperte ENTER para continuar...");
+                pause = input.nextLine();
                 break;
             case 0:
                 System.out.println("Saindo...");
