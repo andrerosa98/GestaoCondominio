@@ -143,9 +143,9 @@ public class Usuario {
     }
 
     public static void excluirUsuario(int idUsuario) throws SQLException {
-        String sql = "DELETE FROM usuarios WHERE id_usuario = ?";
+        String deletar_cadastro = "DELETE FROM usuarios WHERE id_usuario = ?";
         try (Connection conexao = ConexaoBD.getConexao();
-             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+             PreparedStatement stmt = conexao.prepareStatement(deletar_cadastro)) {
             stmt.setInt(1, idUsuario);
             stmt.executeUpdate();
         }
