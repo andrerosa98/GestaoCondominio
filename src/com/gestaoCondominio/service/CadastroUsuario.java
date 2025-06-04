@@ -116,7 +116,6 @@ public class CadastroUsuario {
 
         System.out.print("CPF (Somente números): ");
         cpf = input.nextLine();
-        input.nextLine();
         while (!com.gestaoCondominio.util.Verificar.verificarCPF(cpf)) {
             System.out.print("CPF inválido. Digite novamente: ");
             cpf = input.nextLine();
